@@ -1,21 +1,11 @@
-const show = () => {
-    if(JSON.parse(localStorage.getItem('dataArr')) != null){
+const saveData = (data) => {
 
-        let element = document.querySelector(".storage");
-        while (element.firstChild) {
-            element.removeChild(element.firstChild);
-        }
-
-        let arr = [];
+    let arr = [];
+    if(JSON.parse(localStorage.getItem('dataArr')) != null)
         arr = JSON.parse(localStorage.getItem('dataArr'));
-
-        for(let i of arr){
-            const p = document.createElement('p');
-            p.textContent = `${i.address}, ${i.city}. Pasto kodas: ${i.post_code}`;
-            document.querySelector('.storage').appendChild(p)
-        }
-        document.querySelector('.btn2').style.display = "block";
-    }
+    arr.push(data);
+    console.log(arr);
+    localStorage.setItem('dataArr', JSON.stringify(arr));
 }
 
-export default show;
+export default saveData;

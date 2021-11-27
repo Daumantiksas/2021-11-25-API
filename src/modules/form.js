@@ -8,7 +8,7 @@ const form = () =>{
         <input type="text" class="form-control result" aria-label="Adresas" readonly >
 </div>
     <div class="col">
-    <button type="submit" class="btn btn-primary mb-2">Search</button>
+    <button type="submit" class="btn1 btn-primary mb-2">Search</button>
     </div>
     
     </div>

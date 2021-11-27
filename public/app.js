@@ -3100,13 +3100,16 @@ function within(min, value, max) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_RendersForms__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/RendersForms */ "./src/modules/RendersForms.js");
 /* harmony import */ var _modules_searchCode__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/searchCode */ "./src/modules/searchCode.js");
-/* harmony import */ var _modules_saveData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/saveData */ "./src/modules/saveData.js");
+/* harmony import */ var _modules_show__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/show */ "./src/modules/show.js");
+/* harmony import */ var _modules_remove__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./modules/remove */ "./src/modules/remove.js");
+
 
 
 
 (0,_modules_RendersForms__WEBPACK_IMPORTED_MODULE_0__["default"])();
 (0,_modules_searchCode__WEBPACK_IMPORTED_MODULE_1__["default"])();
-(0,_modules_saveData__WEBPACK_IMPORTED_MODULE_2__["default"])();
+(0,_modules_remove__WEBPACK_IMPORTED_MODULE_3__["default"])();
+(0,_modules_show__WEBPACK_IMPORTED_MODULE_2__["default"])();
 
 __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
 
@@ -3169,10 +3172,39 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 var form = function form() {
-  return "\n    <div class='row g-3'>\n        <div class=\"col\">\n        <input type=\"text\" class=\"form-control term\" placeholder=\"Iveskite adresa\" aria-label=\"Adresas\">\n</div>\n        <div class=\"col\">\n        <input type=\"text\" class=\"form-control result\" aria-label=\"Adresas\" readonly >\n</div>\n    <div class=\"col\">\n    <button type=\"submit\" class=\"btn btn-primary mb-2\">Search</button>\n    </div>\n    \n    </div>\n    \n    ";
+  return "\n    <div class='row g-3'>\n        <div class=\"col\">\n        <input type=\"text\" class=\"form-control term\" placeholder=\"Iveskite adresa\" aria-label=\"Adresas\">\n</div>\n        <div class=\"col\">\n        <input type=\"text\" class=\"form-control result\" aria-label=\"Adresas\" readonly >\n</div>\n    <div class=\"col\">\n    <button type=\"submit\" class=\"btn1 btn-primary mb-2\">Search</button>\n    </div>\n    \n    </div>\n    \n    ";
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (form);
+
+/***/ }),
+
+/***/ "./src/modules/remove.js":
+/*!*******************************!*\
+  !*** ./src/modules/remove.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var remove = function remove() {
+  document.querySelector('.btn2').addEventListener('click', function () {
+    document.querySelector('section .card-body').value = "";
+    localStorage.removeItem('dataArr');
+    console.log("localStoraguikas " + localStorage.getItem('dataArr'));
+    var element = document.querySelector(".storage");
+
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
+    }
+
+    document.querySelector('.btn2').style.display = 'none';
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (remove);
 
 /***/ }),
 
@@ -3180,6 +3212,70 @@ var form = function form() {
 /*!*********************************!*\
   !*** ./src/modules/saveData.js ***!
   \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+var saveData = function saveData(data) {
+  var arr = [];
+  if (JSON.parse(localStorage.getItem('dataArr')) != null) arr = JSON.parse(localStorage.getItem('dataArr'));
+  arr.push(data);
+  console.log(arr);
+  localStorage.setItem('dataArr', JSON.stringify(arr));
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (saveData);
+
+/***/ }),
+
+/***/ "./src/modules/searchCode.js":
+/*!***********************************!*\
+  !*** ./src/modules/searchCode.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _ajaxServer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ajaxServer */ "./src/modules/ajaxServer.js");
+/* harmony import */ var _saveData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./saveData */ "./src/modules/saveData.js");
+/* harmony import */ var _show__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./show */ "./src/modules/show.js");
+
+
+
+
+var searchCode = function searchCode() {
+  document.querySelector('form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    var searchTerm = document.querySelector('.term').value;
+    var searchResponse;
+    (0,_ajaxServer__WEBPACK_IMPORTED_MODULE_0__["default"])(searchTerm).then(function (result) {
+      return searchResponse = result;
+    }).then(function () {
+      return console.log(searchResponse.data[0]);
+    }).then(function () {
+      if (searchResponse.total === 1) {
+        document.querySelector('.result').value = searchResponse.data[0].post_code;
+        (0,_saveData__WEBPACK_IMPORTED_MODULE_1__["default"])(searchResponse.data[0]);
+        (0,_show__WEBPACK_IMPORTED_MODULE_2__["default"])();
+      } else {
+        document.querySelector("main").innerHTML = "<p>Paieskai nesekminga</p>";
+      }
+    });
+  });
+};
+
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (searchCode);
+
+/***/ }),
+
+/***/ "./src/modules/show.js":
+/*!*****************************!*\
+  !*** ./src/modules/show.js ***!
+  \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -3224,46 +3320,6 @@ var show = function show() {
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (show);
-
-/***/ }),
-
-/***/ "./src/modules/searchCode.js":
-/*!***********************************!*\
-  !*** ./src/modules/searchCode.js ***!
-  \***********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _ajaxServer__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ajaxServer */ "./src/modules/ajaxServer.js");
-/* harmony import */ var _saveData__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./saveData */ "./src/modules/saveData.js");
-
-
-
-var searchCode = function searchCode() {
-  document.querySelector('form').addEventListener('submit', function (event) {
-    event.preventDefault();
-    var searchTerm = document.querySelector('.term').value;
-    var searchResponse;
-    (0,_ajaxServer__WEBPACK_IMPORTED_MODULE_0__["default"])(searchTerm).then(function (result) {
-      return searchResponse = result;
-    }).then(function () {
-      return console.log(searchResponse.data[0]);
-    }).then(function () {
-      if (searchResponse.total === 1) {
-        document.querySelector('.result').value = searchResponse.data[0].post_code;
-        (0,_saveData__WEBPACK_IMPORTED_MODULE_1__["default"])(searchResponse.data[0].post_code);
-        (0,_saveData__WEBPACK_IMPORTED_MODULE_1__["default"])();
-      } else {
-        document.querySelector("main").innerHTML = "<p>Paieskai nesekminga</p>";
-      }
-    });
-  });
-};
-
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (searchCode);
 
 /***/ }),
 
