@@ -10,12 +10,7 @@ const form = () =>{
     <div class="col">
     <button type="submit" class="btn btn-primary mb-2">Search</button>
     </div>
-    <div class="col">
-        <input type="text" class="form-control save" aria-label="Istorija" readonly >
-</div>
-    <div class="col">
-    <button type="submit" class="btn btn-primary mb-2">Clear</button>
-    </div>
+    
     </div>
     
     `)

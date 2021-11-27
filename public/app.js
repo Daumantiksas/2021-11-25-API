@@ -3100,10 +3100,13 @@ function within(min, value, max) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _modules_RendersForms__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/RendersForms */ "./src/modules/RendersForms.js");
 /* harmony import */ var _modules_searchCode__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/searchCode */ "./src/modules/searchCode.js");
+/* harmony import */ var _modules_saveData__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./modules/saveData */ "./src/modules/saveData.js");
+
 
 
 (0,_modules_RendersForms__WEBPACK_IMPORTED_MODULE_0__["default"])();
 (0,_modules_searchCode__WEBPACK_IMPORTED_MODULE_1__["default"])();
+(0,_modules_saveData__WEBPACK_IMPORTED_MODULE_2__["default"])();
 
 __webpack_require__(/*! bootstrap */ "./node_modules/bootstrap/dist/js/bootstrap.esm.js");
 
@@ -3166,7 +3169,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 var form = function form() {
-  return "\n    <div class='row g-3'>\n        <div class=\"col\">\n        <input type=\"text\" class=\"form-control term\" placeholder=\"Iveskite adresa\" aria-label=\"Adresas\">\n</div>\n        <div class=\"col\">\n        <input type=\"text\" class=\"form-control result\" aria-label=\"Adresas\" readonly >\n</div>\n    <div class=\"col\">\n    <button type=\"submit\" class=\"btn btn-primary mb-2\">Search</button>\n    </div>\n    <div class=\"col\">\n        <input type=\"text\" class=\"form-control save\" aria-label=\"Istorija\" readonly >\n</div>\n    <div class=\"col\">\n    <button type=\"submit\" class=\"btn btn-primary mb-2\">Clear</button>\n    </div>\n    </div>\n    \n    ";
+  return "\n    <div class='row g-3'>\n        <div class=\"col\">\n        <input type=\"text\" class=\"form-control term\" placeholder=\"Iveskite adresa\" aria-label=\"Adresas\">\n</div>\n        <div class=\"col\">\n        <input type=\"text\" class=\"form-control result\" aria-label=\"Adresas\" readonly >\n</div>\n    <div class=\"col\">\n    <button type=\"submit\" class=\"btn btn-primary mb-2\">Search</button>\n    </div>\n    \n    </div>\n    \n    ";
 };
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (form);
@@ -3183,15 +3186,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-var saveData = function saveData(data) {
-  var arr = [];
-  if (JSON.parse(localStorage.getItem('dataArr')) != null) arr = JSON.parse(localStorage.getItem('dataArr'));
-  arr.push(data);
-  console.log(arr);
-  localStorage.setItem('dataArr', JSON.stringify(arr));
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+var show = function show() {
+  if (JSON.parse(localStorage.getItem('dataArr')) != null) {
+    var element = document.querySelector(".storage");
+
+    while (element.firstChild) {
+      element.removeChild(element.firstChild);
+    }
+
+    var arr = [];
+    arr = JSON.parse(localStorage.getItem('dataArr'));
+
+    var _iterator = _createForOfIteratorHelper(arr),
+        _step;
+
+    try {
+      for (_iterator.s(); !(_step = _iterator.n()).done;) {
+        var i = _step.value;
+        var p = document.createElement('p');
+        p.textContent = "".concat(i.address, ", ").concat(i.city, ". Pasto kodas: ").concat(i.post_code);
+        document.querySelector('.storage').appendChild(p);
+      }
+    } catch (err) {
+      _iterator.e(err);
+    } finally {
+      _iterator.f();
+    }
+
+    document.querySelector('.btn2').style.display = "block";
+  }
 };
 
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (saveData);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (show);
 
 /***/ }),
 
@@ -3218,11 +3250,12 @@ var searchCode = function searchCode() {
     (0,_ajaxServer__WEBPACK_IMPORTED_MODULE_0__["default"])(searchTerm).then(function (result) {
       return searchResponse = result;
     }).then(function () {
-      return console.log(searchResponse.data[0].post_code);
+      return console.log(searchResponse.data[0]);
     }).then(function () {
       if (searchResponse.total === 1) {
         document.querySelector('.result').value = searchResponse.data[0].post_code;
         (0,_saveData__WEBPACK_IMPORTED_MODULE_1__["default"])(searchResponse.data[0].post_code);
+        (0,_saveData__WEBPACK_IMPORTED_MODULE_1__["default"])();
       } else {
         document.querySelector("main").innerHTML = "<p>Paieskai nesekminga</p>";
       }
